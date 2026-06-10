@@ -1,0 +1,27 @@
+services:
+  cups:
+    build:
+      context: ..
+      dockerfile: x86/Dockerfile
+    platform: linux/386
+    container_name: samsung-m2020-cups-x86
+    network_mode: host
+    restart: unless-stopped
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    environment:
+      QUEUE_NAME: ${QUEUE_NAME:-Samsung_M2020}
+      DEVICE_URI: ${DEVICE_URI:?Set DEVICE_URI in x86/.env}
+    volumes:
+      - cups-state:/etc/cups
+      - cups-spool:/var/spool/cups
+    healthcheck:
+      test: ["CMD", "lpstat", "-r"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  cups-state:
+  cups-spool:

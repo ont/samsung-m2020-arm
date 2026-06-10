@@ -1,16 +1,17 @@
 services:
   cups:
     build:
-      context: .
+      context: ..
+      dockerfile: x86_64/Dockerfile
     platform: linux/amd64
-    container_name: samsung-m2020-cups
+    container_name: samsung-m2020-cups-x86_64
     network_mode: host
     restart: unless-stopped
     devices:
       - /dev/bus/usb:/dev/bus/usb
     environment:
       QUEUE_NAME: ${QUEUE_NAME:-Samsung_M2020}
-      DEVICE_URI: ${DEVICE_URI:?Set DEVICE_URI in .env}
+      DEVICE_URI: ${DEVICE_URI:?Set DEVICE_URI in x86_64/.env}
     volumes:
       - cups-state:/etc/cups
       - cups-spool:/var/spool/cups
