@@ -6,22 +6,22 @@ Runs Samsung's proprietary x86_64 SPL3 filter in an Ubuntu 24.04 CUPS container.
 
 ```mermaid
 flowchart LR
-    Client[Network clients] -->|IPP, TCP 631| CUPS
-    Client -.->|mDNS discovery, UDP 5353| Avahi
+    Client["Network clients"] -->|"IPP TCP 631"| CUPS
+    Client -.->|"mDNS UDP 5353"| Avahi
 
-    subgraph Host[ARM64 host]
-        Avahi[Avahi service]
-        QEMU[QEMU amd64 binfmt emulation]
+    subgraph Host["ARM64 host"]
+        Avahi["Avahi"]
+        QEMU["QEMU amd64 binfmt"]
 
-        subgraph Container[Docker container: linux/amd64]
-            CUPS[CUPS print server]
-            Driver[Samsung x86_64 SPL3 driver]
+        subgraph Container["Docker container linux/amd64"]
+            CUPS["CUPS print server"]
+            Driver["Samsung x86_64 SPL3 driver"]
             CUPS --> Driver
         end
 
-        USB[/dev/bus/usb device mount]
-        Config[(cups-state volume<br/>/etc/cups)]
-        Spool[(cups-spool volume<br/>/var/spool/cups)]
+        USB["USB mount: /dev/bus/usb"]
+        Config["Volume: cups-state to /etc/cups"]
+        Spool["Volume: cups-spool to /var/spool/cups"]
 
         QEMU --> Container
         Config --> CUPS
@@ -29,8 +29,8 @@ flowchart LR
         Driver --> USB
     end
 
-    USB --> Printer[Samsung M2020]
-    Avahi -.->|advertises IPP queue| CUPS
+    USB --> Printer["Samsung M2020"]
+    Avahi -.->|"Advertises IPP queue"| CUPS
 ```
 
 The driver archive, `cupsd.conf`, and `entrypoint.sh` are copied into the image at build time. At runtime, only `/dev/bus/usb` and the two named CUPS volumes are mounted. Host networking exposes CUPS directly on TCP port 631; Avahi remains on the host and uses multicast UDP port 5353.
