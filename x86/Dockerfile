@@ -3,7 +3,10 @@ FROM debian:bookworm-slim
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Some ARMv7 QEMU/binfmt combinations reject i386 utime syscalls.
-RUN export TAR_OPTIONS=--touch \
+COPY x86/tar-no-utime /usr/local/sbin/tar-no-utime
+
+RUN mv /usr/bin/tar /usr/bin/tar.real \
+    && install -m 0755 /usr/local/sbin/tar-no-utime /usr/bin/tar \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
         cups \
@@ -11,6 +14,8 @@ RUN export TAR_OPTIONS=--touch \
         ca-certificates \
         libcupsimage2 \
         libstdc++6 \
+    && mv -f /usr/bin/tar.real /usr/bin/tar \
+    && rm /usr/local/sbin/tar-no-utime \
     && rm -rf /var/lib/apt/lists/*
 
 COPY uld_V1.00.39_01.17.tar.gz /tmp/uld.tar.gz

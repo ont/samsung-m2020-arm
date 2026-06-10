@@ -1,0 +1,11 @@
+#!/bin/sh
+
+for arg do
+    case "$arg" in
+        --extract|--get|-x*|-[!-]*x*)
+            exec /usr/bin/tar.real --touch "$@"
+            ;;
+    esac
+done
+
+exec /usr/bin/tar.real "$@"
