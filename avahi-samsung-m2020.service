@@ -1,0 +1,18 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+<service-group>
+  <name replace-wildcards="yes">Samsung Xpress M2020 on %h</name>
+  <service>
+    <type>_ipp._tcp</type>
+    <subtype>_universal._sub._ipp._tcp</subtype>
+    <port>631</port>
+    <txt-record>txtvers=1</txt-record>
+    <txt-record>qtotal=1</txt-record>
+    <txt-record>rp=printers/Samsung_M2020</txt-record>
+    <txt-record>ty=Samsung Xpress M2020</txt-record>
+    <txt-record>product=(Samsung M2020 Series)</txt-record>
+    <txt-record>pdl=application/pdf,application/postscript,image/jpeg,image/png,image/pwg-raster</txt-record>
+    <txt-record>Color=F</txt-record>
+    <txt-record>Duplex=F</txt-record>
+  </service>
+</service-group>

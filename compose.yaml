@@ -1,0 +1,26 @@
+services:
+  cups:
+    build:
+      context: .
+    platform: linux/amd64
+    container_name: samsung-m2020-cups
+    network_mode: host
+    restart: unless-stopped
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    environment:
+      QUEUE_NAME: ${QUEUE_NAME:-Samsung_M2020}
+      DEVICE_URI: ${DEVICE_URI:?Set DEVICE_URI in .env}
+    volumes:
+      - cups-state:/etc/cups
+      - cups-spool:/var/spool/cups
+    healthcheck:
+      test: ["CMD", "lpstat", "-r"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  cups-state:
+  cups-spool:
