@@ -2,7 +2,9 @@ FROM debian:bookworm-slim
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update \
+# Some ARMv7 QEMU/binfmt combinations reject i386 utime syscalls.
+RUN export TAR_OPTIONS=--touch \
+    && apt-get update \
     && apt-get install -y --no-install-recommends \
         cups \
         cups-filters \
@@ -15,7 +17,7 @@ COPY uld_V1.00.39_01.17.tar.gz /tmp/uld.tar.gz
 
 RUN mkdir -p /tmp/uld /opt/smfp-common/printer/bin \
         /opt/smfp-common/printer/lib /usr/share/ppd/samsung \
-    && tar --no-same-owner -xzf /tmp/uld.tar.gz -C /tmp/uld \
+    && tar --touch --no-same-owner -xzf /tmp/uld.tar.gz -C /tmp/uld \
     && install -m 0755 /tmp/uld/uld/i386/rastertospl \
         /opt/smfp-common/printer/bin/rastertospl \
     && install -m 0644 /tmp/uld/uld/i386/libscmssc.so \
